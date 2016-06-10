@@ -5,18 +5,22 @@ defmodule Acronym do
   """
   @spec abbreviate(String.t()) :: String.t()
   def abbreviate(string) do
-    a = string
+    string
     |> String.split(" ")
-    |> Enum.map(&String.capitalize(&1))
+    |> capitalize_words
+    |> select_capital_letters
+    |> Enum.join
+  end
 
-    IO.inspect(a)
+  def capitalize_words(words) do
+    Enum.map(words, fn word ->
+      [ first_letter | rest_of_string ] = String.codepoints(word)
+      List.to_string([ String.upcase(first_letter) | rest_of_string ])
+    end)
+  end
 
-    a = a
-    |> Enum.map(fn(s) -> Regex.scan(~r/\p{Lu}/, s) end)
-
-    IO.inspect(a)
-
-    a
-    |> Enum.reduce("", fn([[e]], acc) -> acc <> e end)
+  def select_capital_letters(words) do
+    Enum.map(words, fn(word) -> Regex.scan(~r/\p{Lu}/, word) end)
+    |> List.flatten
   end
 end
