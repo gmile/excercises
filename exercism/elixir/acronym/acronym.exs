@@ -20,7 +20,9 @@ defmodule Acronym do
   end
 
   def select_capital_letters(words) do
-    Enum.map(words, fn(word) -> Regex.scan(~r/\p{Lu}/, word) end)
+    Enum.map(words, fn word ->
+      String.to_charlist(word)
+    end) fn(word) -> Regex.scan(~r/\p{Lu}/, word) end)
     |> List.flatten
   end
 end
