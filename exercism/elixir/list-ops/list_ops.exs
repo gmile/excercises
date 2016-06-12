@@ -7,10 +7,10 @@ defmodule ListOps do
   # automatically imported) and so shouldn't be used either.
   # 
   # Legend:
-  #   l - l
+  #   l - list
   #   a - accumulator
-  #   h - h
-  #   t - t
+  #   h - head
+  #   t - tail
 
   @spec count(list) :: non_neg_integer
   def count(l), do: _count(l, 0)
