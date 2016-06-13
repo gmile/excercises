@@ -4,36 +4,21 @@ defmodule Sublist do
   Returns whether the first list is a sublist or a superlist of the second list
   and if not whether it is equal or unequal to the second list.
   """
-  def compare([], []), do: :equal
-  def compare([], _), do: :sublist
-  def compare(_, []), do: :superlist
   def compare(l1, l2) do
     cond do
-      length(l1) > length(l2) ->
-        if _compare(l2, l1, l2, l1) do
-          :superlist
-        else
-          :unequal
-        end
-
-      length(l1) < length(l2) ->
-        if  _compare(l1, l2, l1, l2) do
-          :sublist
-        else
-          :unequal
-        end
-
-      length(l1) == length(l2) ->
-        if _compare(l1, l2, true) do
-          :equal
-        else
-          :unequal
-        end
+      length(l1) > length(l2) && _compare(l2, l1, l2, l1) ->
+        :superlist
+      length(l1) < length(l2) && _compare(l1, l2, l1, l2) ->
+        :sublist
+      length(l1) == length(l2) && _compare(l1, l2, true) ->
+        :equal
+      true ->
+        :unequal
     end
   end
 
   def _compare(_, _, false), do: false
-  def _compare([], [], _), do: true
+  def _compare([], [], true), do: true
   def _compare([h1|t1], [h2|t2], _) do
     _compare(t1, t2, h1 == h2)
   end
