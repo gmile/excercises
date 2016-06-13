@@ -12,28 +12,36 @@ defmodule Sublist do
       length(l1) > length(l2) ->
         if _compare(l2, l1, l2, l1) do
           :superlist
+        else
+          :unequal
         end
 
       length(l1) < length(l2) ->
         if  _compare(l1, l2, l1, l2) do
           :sublist
+        else
+          :unequal
         end
 
-      length(l1) < length(l2) ->
-        # length(l1) < length(l2) && _compare(l2, l1, l2) -> :superset
-      # length(l1) == length(l2) ->
-      #   if _compare(l1, l2) do
-      #     :equal
-      #   else
-      #     :unequal
-      #   end
+      length(l1) == length(l2) ->
+        if _compare(l1, l2, true) do
+          :equal
+        else
+          :unequal
+        end
     end
+  end
+
+  def _compare(_, _, false), do: false
+  def _compare([], [], _), do: true
+  def _compare([h1|t1], [h2|t2], _) do
+    _compare(t1, t2, h1 == h2)
   end
 
   def _compare([], super, _, _) when length(super) >= 0, do: true
   def _compare(sub, super, _, _) when length(sub) > length(super), do: false
   def _compare([h1|t1], [h2|t2], backup1, [_|bt] = backup2) do
-    if h1 == h2 do
+    if h1 === h2 do
       _compare(t1, t2, backup1, backup2)
     else
       _compare(backup1, bt, backup1, bt)
