@@ -4,9 +4,12 @@ defmodule BracketPush do
   """
   @spec check_brackets(String.t) :: boolean
   def check_brackets(str) do
-    check(List.flatten(Regex.scan(~r/\p{Ps}|\p{Pe}/, str)), [])
+    Regex.scan(~r/\p{Ps}|\p{Pe}/, str)
+    |> List.flatten
+    |> check
   end
 
+  defp check(_, stack \\ [])
   defp check([], []), do: true
   defp check([], _), do: false
   defp check([h1|t1], []), do: check(t1, [h1])
