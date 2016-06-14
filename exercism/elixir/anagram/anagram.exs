@@ -4,17 +4,19 @@ defmodule Anagram do
   """
   @spec match(String.t, [String.t]) :: [String.t]
   def match(base, candidates) do
-    base_codepoints = codepoints(base)
+    base_downcase = String.downcase(base)
+    base_codepoints = codepoints(base_downcase)
 
     Enum.filter(candidates, fn(candidate) ->
-      String.downcase(candidate) != String.downcase(base) &&
-      codepoints(candidate) == base_codepoints
+      cand_downcase = String.downcase(candidate)
+
+      cand_downcase != base_downcase &&
+      codepoints(cand_downcase) == base_codepoints
     end)
   end
 
   def codepoints(string) do
     string
-    |> String.downcase
     |> String.codepoints
     |> Enum.group_by(&(&1))
   end
