@@ -4,20 +4,18 @@ defmodule Anagram do
   """
   @spec match(String.t, [String.t]) :: [String.t]
   def match(base, candidates) do
-    base_downcase = String.downcase(base)
-    base_codepoints = codepoints(base_downcase)
+    base_ = String.downcase(base)
+    fingerprint = fingerprint(base_)
 
     Enum.filter(candidates, fn(candidate) ->
-      cand_downcase = String.downcase(candidate)
-
-      cand_downcase != base_downcase &&
-      codepoints(cand_downcase) == base_codepoints
+      cand_ = String.downcase(candidate)
+      cand_ != base_ && fingerprint(cand_) == fingerprint
     end)
   end
 
-  def codepoints(string) do
+  def fingerprint(string) do
     string
     |> String.codepoints
-    |> Enum.group_by(&(&1))
+    |> Enum.sort
   end
 end
