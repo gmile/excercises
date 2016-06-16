@@ -22,28 +22,25 @@ defmodule Phone do
   @spec number(String.t) :: String.t
   def number(raw) do
     raw
-    |> normalize2
+    |> prepare
     |> List.to_string
   end
 
-  defp normalize2(raw) do
+  defp prepare(raw) do
     if raw =~ ~r/\p{L}/ do
       @error_sequence
     else
-      numbers =
-        Regex.scan(~r/\p{Nd}/, raw)
-        |> List.flatten
-        |> Enum.join
-        |> String.to_char_list
-        |> normalize
+      Regex.scan(~r/\p{Nd}/, raw)
+      |> List.flatten
+      |> Enum.join
+      |> String.to_char_list
+      |> normalize
     end
   end
 
-  defp normalize([h|t] = l) when length(l) == 11 do
-    if h != ?1, do: @error_sequence, else: t
-  end
-  defp normalize(l) when length(l) < 10, do: @error_sequence
-  defp normalize(l), do: l
+  defp normalize([?1|t] = l) when length(l) == 11, do: t
+  defp normalize(l) when length(l) == 10, do: l
+  defp normalize(_), do: @error_sequence
 
   @doc """
   Extract the area code from a phone number
@@ -65,7 +62,7 @@ defmodule Phone do
   @spec area_code(String.t) :: String.t
   def area_code(raw) do
     raw
-    |> normalize2
+    |> prepare
     |> Enum.take(3)
     |> List.to_string
   end
@@ -89,9 +86,14 @@ defmodule Phone do
   """
   @spec pretty(String.t) :: String.t
   def pretty(raw) do
-    number = raw |> normalize2 |> List.to_string
+    number =
+      raw
+      |> prepare
+      |> List.to_string
 
-    << a::binary-size(3), b::binary-size(3), c::binary-size(4) >> = number
+    << a::binary-size(3),
+       b::binary-size(3),
+       c::binary-size(4) >> = number
 
     "(#{a}) #{b}-#{c}"
   end
