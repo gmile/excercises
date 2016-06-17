@@ -10,12 +10,7 @@ defmodule School do
   """
   @spec add(map, String.t, integer) :: map
   def add(db, name, grade) do
-    {_, output} = Map.get_and_update(db, grade, fn
-      nil -> {nil, [name]}
-      names -> {names, [name | names]}
-    end)
-
-    output
+    Map.update(db, grade, [name], &([name | &1]))
   end
 
   @doc """
