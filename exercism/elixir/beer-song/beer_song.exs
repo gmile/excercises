@@ -3,38 +3,29 @@ defmodule BeerSong do
   Get a single verse of the beer song
   """
   @spec verse(integer) :: String.t
-  def verse(1 = number) do
+  def verse(1), do: _verse("no more bottles", "99 bottles")
+  def verse(2), do: _verse("1 bottle", "no more bottles")
+  def verse(3), do: _verse("2 bottles", "1 bottle")
+  def verse(n), do: _verse("#{n - 1} bottles", "#{n - 2} bottles")
+
+  defp _verse(a, b) do
     """
-    No more bottles of beer on the wall, no more bottles of beer.
-    Go to the store and buy some more, 99 bottles of beer on the wall.
-    """
-  end
-  def verse(2 = number) do
-    """
-    1 bottle of beer on the wall, 1 bottle of beer.
-    Take it down and pass it around, #{"no more"} bottles of beer on the wall.
-    """
-  end
-  def verse(3 = number) do
-    """
-    2 bottles of beer on the wall, 2 bottles of beer.
-    Take one down and pass it around, 1 bottle of beer on the wall.
+    #{line1(a)}
+    #{line2(b)}
     """
   end
-  def verse(number) do
-    """
-    #{number - 1} bottles of beer on the wall, #{number - 1} bottles of beer.
-    Take one down and pass it around, #{number - 2} bottles of beer on the wall.
-    """
-  end
+
+  defp line1(phrase), do: "#{String.capitalize(phrase)} of beer on the wall, #{phrase} of beer."
+
+  defp line2("99 bottles"), do: "Go to the store and buy some more, 99 bottles of beer on the wall."
+  defp line2("no more bottles"), do: "Take it down and pass it around, no more bottles of beer on the wall."
+  defp line2(n_bottles), do: "Take one down and pass it around, #{n_bottles} of beer on the wall."
 
   @doc """
   Get the entire beer song for a given range of numbers of bottles.
   """
   @spec lyrics(Range.t) :: String.t
-  def lyrics do
-    lyrics(100..1)
-  end
+  def lyrics, do: lyrics(100..1)
 
   def lyrics(range) do
     range
