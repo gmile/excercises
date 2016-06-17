@@ -35,20 +35,24 @@ defmodule Meetup do
   """
   @spec meetup(pos_integer, pos_integer, weekday, schedule) :: :calendar.date
   def meetup(year, month, weekday, schedule) do
-    a = if month == 2 && schedule == :last do
-      :calendar.day_of_the_week(year, month, 28)
-    else
-      :calendar.day_of_the_week(year, month, @schedule[schedule])
-    end
+    a = starting_day(year, month, schedule)
     b = @days[weekday]
 
-    day = @schedule[schedule] + days(a, b, schedule)
+    day = day_of_month(a, b, schedule)
     day = if day > 31, do: day - 7, else: day
     day = if day >= 31 && month == 2, do: day - 7 - 1, else: day
 
     {year, month, day}
   end
 
-  defp days(a, b, _) when b >= a, do: b - a
-  defp days(a, b, _) when b  < a, do: b - a + 7
+  defp day_of_month(a, b, s) when b >= a, do: @schedule[s] + b - a
+  defp day_of_month(a, b, s) when b  < a, do: @schedule[s] + b - a + 7
+
+  defp starting_day(year, 2, :last) do
+    :calendar.day_of_the_week(year, 2, 28)
+  end
+
+  defp starting_day(year, month, schedule) do
+    :calendar.day_of_the_week(year, month, @schedule[schedule])
+  end
 end
