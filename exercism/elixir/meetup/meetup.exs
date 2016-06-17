@@ -55,4 +55,6 @@ defmodule Meetup do
   defp starting_day(year, month, schedule) do
     :calendar.day_of_the_week(year, month, @schedule[schedule])
   end
+
+  # TODO: implement days in month, and rely on it
 end
