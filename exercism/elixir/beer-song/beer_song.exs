@@ -8,15 +8,8 @@ defmodule BeerSong do
   def verse(3), do: _verse("2 bottles", "1 bottle")
   def verse(n), do: _verse("#{n - 1} bottles", "#{n - 2} bottles")
 
-  defp _verse(a, b) do
-    """
-    #{line1(a)}
-    #{line2(b)}
-    """
-  end
-
+  defp _verse(a, b), do: "#{line1(a)}\n#{line2(b)}\n"
   defp line1(phrase), do: "#{String.capitalize(phrase)} of beer on the wall, #{phrase} of beer."
-
   defp line2("99 bottles"), do: "Go to the store and buy some more, 99 bottles of beer on the wall."
   defp line2("no more bottles"), do: "Take it down and pass it around, no more bottles of beer on the wall."
   defp line2(n_bottles), do: "Take one down and pass it around, #{n_bottles} of beer on the wall."
@@ -26,10 +19,5 @@ defmodule BeerSong do
   """
   @spec lyrics(Range.t) :: String.t
   def lyrics, do: lyrics(100..1)
-
-  def lyrics(range) do
-    range
-    |> Enum.map(fn(e) -> verse(e) end)
-    |> Enum.join("\n")
-  end
+  def lyrics(range), do: Enum.map_join(range, "\n", &verse(&1))
 end
