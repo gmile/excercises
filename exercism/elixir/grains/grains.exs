@@ -1,16 +1,14 @@
 defmodule Grains do
+  import Bitwise, only: ["<<<": 2]
   @doc """
   Calculate two to the power of the input minus one.
   """
   @spec square(pos_integer) :: pos_integer
-  def square(number), do: do_square(number, 1, 0)[:value]
+  def square(number), do: 1 <<< (number - 1)
 
   @doc """
   Adds square of each number from 1 to 64.
   """
   @spec total :: pos_integer
-  def total, do: do_square(64, 1, 0)[:total]
-
-  defp do_square(1, acc, total), do: %{value: acc, total: 1 + total}
-  defp do_square(n, acc, total), do: do_square(n - 1, acc * 2, total + acc * 2)
+  def total, do: (1 <<< 64) - 1
 end
