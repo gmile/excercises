@@ -17,19 +17,16 @@ defmodule Change do
 
   @spec generate(integer, list) :: {:ok, map} | :error
   def generate(amount, values) do
-    coins = Enum.sort_by(values, &(&1), &>=/2)
+    coins =
+      values
+      |> Enum.sort_by(&(&1), &>=/2)
+      |> Enum.map(&{&1,0})
 
-    check(amount, coins, %{}, coins)
+    check(amount, coins, %{})
   end
 
-  defp check(0, coins, map, original) do
-    o = Enum.into(Enum.map(original, &{&1,0}), %{})
-    { :ok, Map.merge(o, map) }
-  end
-  defp check(amount, [c|_] = coins, map, o) when amount >= c do
-    check(amount - c, coins, Map.update(map, c, 1, fn(e) -> e + 1 end), o)
-  end
-  defp check(amount, [c|t] = coins, map, o) when amount < c, do: check(amount, t, map, o)
-
-  defp check(_, _, _, _), do: :error
+  defp check(0, coins, map), do: { :ok, Map.merge(map, Enum.into(coins, %{})) }
+  defp check(a, [{c, _}|t], map) when a >= c, do: check(rem(a, c), t, put_in(map[c], div(a, c)))
+  defp check(a, [{c, _} = h|t], map) when a < c, do: check(a, t, Map.merge(map, Enum.into([h], %{})))
+  defp check(_, _, _), do: :error
 end
