@@ -27,6 +27,6 @@ defmodule Change do
 
   defp check(0, coins, map), do: { :ok, Enum.into(coins, map) }
   defp check(a, [{c, _}|t], map) when a >= c, do: check(rem(a, c), t, put_in(map[c], div(a, c)))
-  defp check(a, [{c, _} = h|t], map) when a < c, do: check(a, t, Enum.into([h], map))
+  defp check(a, [{c, _}|t], map) when a < c, do: check(a, t, put_in(map[c], 0))
   defp check(_, _, _), do: :error
 end
