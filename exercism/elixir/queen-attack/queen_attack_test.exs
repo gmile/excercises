@@ -27,7 +27,6 @@ defmodule QueenAttackTest do
     end
   end
 
-  @tag :pending
   test "string representation" do
     queens = Queens.new({2, 4}, {6, 6})
     board = String.strip """
@@ -43,7 +42,6 @@ _ _ _ _ _ _ _ _
     assert Queens.to_string(queens) == board
   end
 
-  @tag :pending
   test "another string representation" do
     queens = Queens.new({7, 1}, {0, 0})
     board = String.strip """
@@ -59,7 +57,6 @@ _ W _ _ _ _ _ _
     assert Queens.to_string(queens) == board
   end
 
-  @tag :pending
   test "yet another string representation" do
     queens = Queens.new({4, 3}, {3, 4})
     board = String.strip """
@@ -75,7 +72,6 @@ _ _ _ _ _ _ _ _
     assert Queens.to_string(queens) == board
   end
 
-  @tag :pending
   test "queen placed on the bottom right corner" do
     queens = Queens.new({4, 3}, {7, 7})
     board = String.strip """
@@ -91,7 +87,6 @@ _ _ _ _ _ _ _ B
     assert Queens.to_string(queens) == board
   end
 
-  @tag :pending
   test "queen placed on the edge of the board" do
     queens = Queens.new({4, 3}, {2, 7})
     board = String.strip """
