@@ -7,8 +7,8 @@ defmodule Matrix do
   def rows(str) do
     str
     |> String.split("\n")
-    |> Enum.map(fn(e) ->
-      e
+    |> Enum.map(fn(line) ->
+      line
       |> String.split(" ")
       |> Enum.map(&String.to_integer(&1))
     end)
