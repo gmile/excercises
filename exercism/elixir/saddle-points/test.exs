@@ -31,22 +31,21 @@ b =
 IO.puts("B:")
 IO.inspect(b)
 
-row = 0
-
 for row <- 0..length(a)-1 do
   c   = Enum.filter(b, fn {{_, r}, _} -> r == row end) # get row by index
-  {_, max} = Enum.max_by(c, fn {_, v} -> v end) # find max in a row
+  {_, max} = Enum.max_by(c, fn {_, v} -> v end)        # find max in a row
 
   c
-  |> Enum.filter(fn {_, v} -> v == max end)      # find all maxes in that row
+  |> Enum.filter(fn {_, v} -> v == max end)    # find all maxes in that row
   |> Enum.filter(fn {{max_x, max_y}, max_v} -> # iterate over all maxes
        b
        |> Enum.filter(fn {{x, y}, _} -> {x, y} != {max_x, max_y} && x == max_x end) # find all points in that column (except current max)
        |> Enum.all?(fn {_, v} -> max_v <= v end)                                # check if they are all "good"
      end)
-  |> Enum.map(fn {coordinates, _} -> coordinates end)
-  |> IO.inspect
+  |> Enum.reduce([], fn {coordinates, _}, acc -> [coordinates | acc] end)
 end
+|> List.flatten
+|> IO.inspect
 
 # IO.puts("B: ")
 # IO.inspect(b)
