@@ -29,7 +29,7 @@ b =
   end)
 
 for row <- 0..length(a)-1 do
-  c   = Enum.filter(b, fn {{r, _}, _} -> r == row end) # get row by index
+  c = Enum.filter(b, fn {{r, _}, _} -> r == row end) # get row by index
   {_, max} = Enum.max_by(c, fn {_, v} -> v end)        # find max in a row
 
   c
