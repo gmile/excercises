@@ -28,13 +28,11 @@ defmodule SaddlePointsTest do
     assert Enum.at(rows, 1) == [16, 25, 36]
   end
 
-  @tag :pending
   test "extract a column" do
     columns = Matrix.columns("1 2 3\n4 5 6\n7 8 9\n8 7 6")
     assert Enum.at(columns, 0) == [1, 4, 7, 8]
   end
 
-  @tag :pending
   test "extract another column" do
     columns = Matrix.columns("89 1903 3\n18 3 1\n9 4 800")
     assert Enum.at(columns, 1) == [1903, 3, 4]

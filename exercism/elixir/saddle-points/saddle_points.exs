@@ -16,7 +16,7 @@ defmodule Matrix do
   """
   @spec columns(String.t()) :: [[integer]]
   def columns(str) do
-
+    rows(str) |> List.zip |> Enum.map(&Tuple.to_list(&1))
   end
 
   @doc """
