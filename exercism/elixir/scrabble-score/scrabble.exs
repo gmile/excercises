@@ -18,12 +18,9 @@ defmodule Scrabble do
     Enum.reduce(letters, acc, &put_in(&2, [&1], points))
   end)
 
-  def score(""), do: 0
-  def score(word), do: do_score(Regex.scan(~r/\p{L}+/, word))
-
-  defp do_score([]), do: 0
-  defp do_score([[chars]]) do
-    chars
+  def score(word) do
+    word
+    |> String.strip
     |> String.downcase
     |> String.to_char_list
     |> Enum.map(&@map[&1])
