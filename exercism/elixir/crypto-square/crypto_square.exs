@@ -20,10 +20,6 @@ defmodule CryptoSquare do
     str
     |> Enum.chunk(cols, cols, Stream.repeatedly(fn -> '' end))
     |> List.zip
-    |> Enum.map_join(" ", fn(e) ->
-      e
-      |> Tuple.to_list
-      |> List.to_string
-    end)
+    |> Enum.map_join(" ", &Tuple.to_list/1)
   end
 end
