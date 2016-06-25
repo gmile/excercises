@@ -10,8 +10,7 @@ defmodule Diamond do
     empty_line = List.duplicate(?\s, 2 * total - 1)
 
     top = Enum.map(?A..letter, &build_line(empty_line, total, &1))
-    result = top ++ tl(Enum.reverse(top))
-    Enum.join(result, "\n") <> "\n"
+    Enum.join(top ++ tl(Enum.reverse(top)), "\n") <> "\n"
   end
 
   def build_line(empty_line, total, ?A) do
