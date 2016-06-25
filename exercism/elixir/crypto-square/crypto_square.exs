@@ -17,12 +17,8 @@ defmodule CryptoSquare do
 
     cols = cols_rows(length(str))
 
-    padding =
-    String.duplicate(" ", cols)
-    |> String.to_char_list
-
     str
-    |> Enum.chunk(cols, cols, padding)
+    |> Enum.chunk(cols, cols, Stream.cycle(' '))
     |> List.zip
     |> Enum.map_join(" ", fn(e) ->
       e
