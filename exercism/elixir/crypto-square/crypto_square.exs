@@ -15,7 +15,7 @@ defmodule CryptoSquare do
       |> String.replace(~r|[^\w]|, "")
       |> String.to_char_list
 
-    cols = cols_rows(length(str))
+    cols = :math.sqrt(length(str)) |> Float.ceil |> trunc
 
     str
     |> Enum.chunk(cols, cols, Stream.cycle(' '))
@@ -26,14 +26,5 @@ defmodule CryptoSquare do
       |> List.to_string
       |> String.trim_trailing
     end)
-  end
-
-  def cols_rows(length) do
-    (for r <- 1..length,
-        c <- 1..length,
-        c >= r,
-        c <= r + 1,
-        length <= c * r,
-     do: c) |> hd
   end
 end
