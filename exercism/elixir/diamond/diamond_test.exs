@@ -25,7 +25,6 @@ defmodule DiamondTest do
     """
   end
 
-  @tag :pending
   test "letter E" do
     shape = Diamond.build_shape(?E)
     assert shape == """
