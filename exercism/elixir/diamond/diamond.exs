@@ -25,7 +25,3 @@ defmodule Diamond do
     |> List.insert_at(total + (letter - ?A), letter)
   end
 end
-# 
-# total = letter - ?A + 1
-# empty_row = List.duplicate(?_, 2 * total - 1)
-# Diamond.build_line(empty_row, total,
