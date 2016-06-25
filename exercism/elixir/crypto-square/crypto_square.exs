@@ -18,13 +18,12 @@ defmodule CryptoSquare do
     cols = :math.sqrt(length(str)) |> Float.ceil |> trunc
 
     str
-    |> Enum.chunk(cols, cols, Stream.cycle(' '))
+    |> Enum.chunk(cols, cols, Stream.repeatedly(fn -> '' end))
     |> List.zip
     |> Enum.map_join(" ", fn(e) ->
       e
       |> Tuple.to_list
       |> List.to_string
-      |> String.trim_trailing
     end)
   end
 end
