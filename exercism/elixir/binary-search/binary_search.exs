@@ -26,15 +26,12 @@ defmodule BinarySearch do
     end
   end
 
-  def do_search([{key, index}], key), do: {:ok, index}
   def do_search([], _), do: :not_found
-  def do_search([{_}], _), do: :not_found
   def do_search(list, key) do
-    { a, b } = Enum.split(list, div(length(list), 2))
-    { e, i } = hd(b)
+    { a, [ { e, i } | b ] } = Enum.split(list, div(length(list), 2))
 
     cond do
-      key == e -> i
+      key == e -> { :ok, i }
       key < e -> do_search(a, key)
       key > e -> do_search(b, key)
     end
