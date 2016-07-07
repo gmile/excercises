@@ -25,30 +25,13 @@ defmodule Hexadecimal do
       |> Enum.reverse
       |> Enum.with_index
       |> Enum.reduce(0, fn({ char, index }, acc) ->
-        n = case char do
-          ?a -> 10
-          ?b -> 11
-          ?c -> 12
-          ?d -> 13
-          ?e -> 14
-          ?f -> 15
-          ?0 -> 0
-          ?1 -> 1
-          ?2 -> 2
-          ?3 -> 3
-          ?4 -> 4
-          ?5 -> 5
-          ?6 -> 6
-          ?7 -> 7
-          ?8 -> 8
-          ?9 -> 9
+        n =
+        cond do
+          char in ?a..?f -> char - 87
+          char in ?0..?9 -> char - 48
         end
 
-        if index == 0 do
-          acc + n
-        else
-          acc + n * (1 <<< index * 4)
-        end
+        acc + if index == 0, do: n, else: n * (1 <<< index * 4)
       end)
     else
       0
