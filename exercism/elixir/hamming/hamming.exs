@@ -12,8 +12,8 @@ defmodule DNA do
     hd(strand1, strand2, 0)
   end
 
-  def hd([], [], a), do: a
+  def hd([], [], a), do: {:ok, a}
   def hd([h|t1], [h|t2], a), do: hd(t1, t2, a)
   def hd([_|t1], [_|t2], a), do: hd(t1, t2, a+1)
-  def hd(_, _, _), do: nil
+  def hd(_, _, _), do: {:error, "Lists must be the same length."}
 end
