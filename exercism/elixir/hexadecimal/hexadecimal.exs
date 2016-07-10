@@ -23,11 +23,11 @@ defmodule Hexadecimal do
       |> String.to_char_list
       |> Enum.reduce(0, fn(char, acc) ->
         n =
-        cond do
-          char in ?A..?F -> char - ?A + 10
-          char in ?a..?f -> char - ?a + 10
-          char in ?0..?9 -> char - ?0
-        end
+          cond do
+            char in ?A..?F -> char - ?A + 10
+            char in ?a..?f -> char - ?a + 10
+            char in ?0..?9 -> char - ?0
+          end
 
         acc * 16 + n
       end)
