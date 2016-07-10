@@ -9,11 +9,11 @@ defmodule DNA do
   """
   @spec hamming_distance([char], [char]) :: non_neg_integer
   def hamming_distance(strand1, strand2) do
-    hd(strand1, strand2, 0)
+    hamming(strand1, strand2, 0)
   end
 
-  def hd([], [], a), do: {:ok, a}
-  def hd([h|t1], [h|t2], a), do: hd(t1, t2, a)
-  def hd([_|t1], [_|t2], a), do: hd(t1, t2, a+1)
-  def hd(_, _, _), do: {:error, "Lists must be the same length."}
+  def hamming([], [], a), do: {:ok, a}
+  def hamming([h|t1], [h|t2], a), do: hamming(t1, t2, a)
+  def hamming([_|t1], [_|t2], a), do: hamming(t1, t2, a+1)
+  def hamming(_, _, _), do: {:error, "Lists must be the same length."}
 end
