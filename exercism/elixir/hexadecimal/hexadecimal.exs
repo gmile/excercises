@@ -20,18 +20,16 @@ defmodule Hexadecimal do
   def to_decimal(hex) do
     if hex =~ ~r/^[A-Fa-f0-9]+$/ do
       hex
-      |> String.downcase
       |> String.to_char_list
-      |> Enum.reverse
-      |> Enum.with_index
-      |> Enum.reduce(0, fn({ char, index }, acc) ->
+      |> Enum.reduce(0, fn(char, acc) ->
         n =
         cond do
-          char in ?a..?f -> char - 87
-          char in ?0..?9 -> char - 48
+          char in ?A..?F -> char - ?A + 10
+          char in ?a..?f -> char - ?a + 10
+          char in ?0..?9 -> char - ?0
         end
 
-        acc + if index == 0, do: n, else: n * (1 <<< index * 4)
+        acc * 16 + n
       end)
     else
       0
