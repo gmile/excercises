@@ -4,7 +4,7 @@ defmodule BracketPush do
   """
   @spec check_brackets(String.t) :: boolean
   def check_brackets(str) do
-    check(str, [])
+    check(str, <<>>)
   end
 
   defp check(<<>>, <<>>), do: true
