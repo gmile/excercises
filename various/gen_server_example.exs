@@ -1,7 +1,7 @@
 defmodule Stack do  
   use GenServer
 
-  def start_link(state) do
+  def initialize(state) do
     { :ok, pid } = :gen_server.start_link(__MODULE__, state, [])
 
     pid
@@ -30,7 +30,7 @@ defmodule Stack do
   end
 end
 
-pid = Stack.start_link([1])
+pid = Stack.initialize([1])
 pid |> Stack.push(2)
 pid |> Stack.push(3)
 pid |> Stack.pop |> IO.puts
