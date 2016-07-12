@@ -1,6 +1,20 @@
 defmodule Stack do  
   use GenServer
 
+  def start_link(state) do
+    { :ok, pid } = :gen_server.start_link(__MODULE__, state, [])
+
+    pid
+  end
+
+  def push(pid, value) do
+    :gen_server.cast(pid, { :push, value })
+  end
+
+  def pop(pid) do
+    :gen_server.call(pid, :pop)
+  end
+
   def handle_call(:pop, _from, []) do
     {:reply, nil, []}
   end
@@ -16,10 +30,9 @@ defmodule Stack do
   end
 end
 
-{:ok, pid} = :gen_server.start_link(Stack, [], [])
-:gen_server.cast(pid, { :push, 1 }) |> IO.puts
-:gen_server.cast(pid, { :push, 2 }) |> IO.puts
-:gen_server.cast(pid, { :push, 3 }) |> IO.puts
-:gen_server.call(pid, :pop) |> IO.puts
-:gen_server.call(pid, :pop) |> IO.puts
-:gen_server.call(pid, :pop) |> IO.puts
+pid = Stack.start_link([1])
+pid |> Stack.push(2)
+pid |> Stack.push(3)
+pid |> Stack.pop |> IO.puts
+pid |> Stack.pop |> IO.puts
+pid |> Stack.pop |> IO.puts
