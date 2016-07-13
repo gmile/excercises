@@ -13,8 +13,7 @@ defmodule BankAccount do
   """
   @spec open_bank() :: account
   def open_bank() do
-    { :ok, pid } = Agent.start_link(fn -> %{ balance: 0 } end, name: __MODULE__)
-    pid
+    Agent.start_link(fn -> 0 end) |> elem(1)
   end
 
   @doc """
@@ -30,7 +29,7 @@ defmodule BankAccount do
   """
   @spec balance(account) :: integer
   def balance(account) do
-    Agent.get(account, &(&1[:balance]))
+    Agent.get(account, &(&1))
   end
  
   @doc """
@@ -38,6 +37,6 @@ defmodule BankAccount do
   """
   @spec update(account, integer) :: any
   def update(account, amount) do
-    Agent.update(account, &update_in(&1, [:balance], fn(current) -> current + amount end))
+    Agent.update(account, &(&1 + amount))
   end
 end
