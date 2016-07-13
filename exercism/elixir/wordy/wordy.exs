@@ -4,37 +4,33 @@ defmodule Wordy do
   """
   @spec answer(String.t) :: integer
   def answer(<<"What is ", expression::binary>>) do
-    [ n | rest ] =
-      expression
-      |> String.replace("?", "")
-      |> String.replace("minus", "-")
-      |> String.replace("plus", "+")
-      |> String.replace("multiplied by", "*")
-      |> String.replace("divided by", "/")
-      |> String.split(" ")
-      |> Enum.map(fn(e) ->
-        case e |> Integer.parse do
-          { n, "" } -> n
-          :error -> e
-        end
-      end)
-
-    do_answer(rest, n)
-  end
-
-  def do_answer(list, acc \\ 0)
-  def do_answer([], acc), do: acc
-  def do_answer([op], acc), do: raise ArgumentError
-  def do_answer([op, n | rest], acc) do
-    acc = case op do
-      "+" -> acc + n
-      "-" -> acc - n
-      "*" -> acc * n
-      "/" -> acc / n
-    end
-
-    do_answer(rest, acc)
+    { number, rest } = Integer.parse(expression)
+    do_answer(rest, number)
   end
 
   def answer(_), do: raise ArgumentError
+
+  def do_answer(<< " minus ", expression::binary >>, acc) do
+    { number, rest } = Integer.parse(expression)
+    do_answer(rest, acc - number)
+  end
+
+  def do_answer(<< " plus ", expression::binary >>, acc) do
+    { number, rest } = Integer.parse(expression)
+    do_answer(rest, acc + number)
+  end
+
+  def do_answer(<< " divided by ", expression::binary >>, acc) do
+    { number, rest } = Integer.parse(expression)
+    do_answer(rest, acc / number)
+  end
+
+  def do_answer(<< " multiplied by ", expression::binary >>, acc) do
+    { number, rest } = Integer.parse(expression)
+    do_answer(rest, acc * number)
+  end
+
+  def do_answer(<< "?" >>, acc), do: acc
+
+  def do_answer(_, _), do: raise ArgumentError
 end
