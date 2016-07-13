@@ -24,6 +24,7 @@ defmodule Wordy do
 
   def do_answer(list, acc \\ 0)
   def do_answer([], acc), do: acc
+  def do_answer([op], acc), do: raise ArgumentError
   def do_answer([op, n | rest], acc) do
     acc = case op do
       "+" -> acc + n

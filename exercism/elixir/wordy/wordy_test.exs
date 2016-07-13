@@ -64,7 +64,6 @@ defmodule WordyTest do
     assert Wordy.answer("What is -12 divided by 2 divided by -3?") == 2
   end
 
-  @tag :pending
   test "unknown operation" do
     assert_raise ArgumentError, fn ->
       Wordy.answer("What is 52 cubed?")
