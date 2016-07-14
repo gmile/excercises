@@ -1,5 +1,4 @@
 defmodule Series do
-
   @doc """
   Finds the largest product of a given number of consecutive numbers in a given string of numbers.
   """
