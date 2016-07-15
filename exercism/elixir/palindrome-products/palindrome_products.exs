@@ -16,7 +16,7 @@ defmodule Palindromes do
       |> String.length()
 
     palindroms =
-      palindromes(min_factor * max_factor)
+      palindromes(min_size * max_size)
       |> Enum.filter(&(&1 != 0))
       |> Enum.map(fn p ->
         p
