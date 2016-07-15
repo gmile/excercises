@@ -24,15 +24,23 @@ defmodule Palindromes do
         |> Integer.parse()
         |> elem(0)
       end)
+    |> Enum.reduce(%{}, fn(palindrom, acc) ->
+      factors =
+        (for a <- min_factor..max_factor,
+             rem(palindrom, a) == 0,
+             div(palindrom, a) <= max_factor,
+             do: [div(palindrom, a), a])
+      |> Enum.map(&Enum.sort/1)
+      |> Enum.uniq
 
-    IO.inspect("-------- #{inspect palindroms} --------")
+      put_in(acc[palindrom], factors)
+    end)
+    |> Enum.filter(fn {a,l} -> length(l) > 0 end)
+    |> Enum.into(%{})
 
-    (for a <- min_factor..max_factor,
-         palindrom <- palindroms,
-         rem(palindrom, a) == 0,
-         div(palindrom, a) <= max_factor,
-         palindrom > 0,
-         do: [a, div(palindrom, a)])
+    IO.inspect(palindroms)
+
+    palindroms
   end
 
   def palindromes(1), do: for a <- 0..9, do: [a]
