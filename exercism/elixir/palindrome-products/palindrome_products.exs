@@ -41,9 +41,22 @@ defmodule Palindromes do
     |> Enum.filter(fn {a,l} -> length(l) > 0 end)
     |> Enum.into(%{})
 
-    IO.inspect(palindroms)
-
     palindroms
+  end
+
+  def ppp(n) do
+    n
+    |> palindromes()
+    |> Enum.map(fn l ->
+      l
+      |> Enum.map(fn x ->
+           x
+           |> Enum.join
+           |> Integer.parse
+           |> elem(0)
+         end)
+      end)
+    |> List.flatten
   end
 
   def palindromes(1) do
@@ -55,18 +68,12 @@ defmodule Palindromes do
   end
 
   def palindromes(n) do
-    zeros = List.duplicate(0, n - 2)
     z = palindromes(n - 1)
-    IO.puts("------------- #{inspect z}")
-    [one,two|_] = z
-    pals = [zeros | two]
-
-    IO.puts("------------- #{inspect two}")
-    IO.puts("------------- #{inspect pals}")
+    [_, two |_ ] = z
 
     new_pals =
       for a <- 1..9,
-          b <- pals,
+          b <- [List.duplicate(0, n - 2) | two],
           do: [a | ([a | b] |> Enum.reverse)]
 
     [new_pals | z]
