@@ -8,13 +8,9 @@ defmodule Palindromes do
   def generate(max_factor, min_factor \\ 1) do
     (for a <- min_factor..max_factor-1,
         b <- a..max_factor,
-        palindrome?(a * b),
+        n = Integer.digits(a * b),
+        n == Enum.reverse(n),
         do: [a, b])
     |> Enum.group_by(fn [a, b] -> a * b end)
-  end
-
-  def palindrome?(number) do
-    n = Integer.digits(number)
-    n == Enum.reverse(n)
   end
 end
