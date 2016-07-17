@@ -16,15 +16,7 @@ defmodule Palindromes do
   end
 
   def palindrome?(number) do
-    s = to_string(number) |> String.to_char_list()
-    l = length(s)
-    {a, b} = Enum.split(s, div(l, 2))
-
-    if Integer.is_even(l) do
-      a == Enum.reverse(b)
-    else
-      [_|x] = b
-      a == Enum.reverse(x)
-    end
+    n = Integer.digits(number)
+    n == Enum.reverse(n)
   end
 end
