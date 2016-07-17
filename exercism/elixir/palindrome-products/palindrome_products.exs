@@ -1,56 +1,30 @@
 defmodule Palindromes do
+  require Integer
 
   @doc """
   Generates all palindrome products from an optionally given min factor (or 1) to a given max factor.
   """
   @spec generate(non_neg_integer, non_neg_integer) :: map
   def generate(max_factor, min_factor \\ 1) do
-    ppp(6)
-    |> Enum.reduce(%{}, fn(palindrom, acc) ->
-      factors =
-        (for a <- min_factor..max_factor,
-             rem(palindrom, a) == 0,
-             div(palindrom, a) in min_factor..max_factor,
-             do: [div(palindrom, a), a])
-      |> Enum.map(&Enum.sort/1)
-      |> Enum.uniq
+    p =
+      for a <- min_factor..max_factor-1,
+          b <- a..max_factor,
+          palindrome?(a * b),
+          do: [a, b]
 
-      put_in(acc[palindrom], factors)
-    end)
-    |> Enum.filter(fn {a,l} -> length(l) > 0 end)
-    |> Enum.into(%{})
+    p |> Enum.group_by(fn [a, b] -> a * b end)
   end
 
-  def ppp(n) do
-    n
-    |> palindromes()
-    |> Enum.flat_map(fn l ->
-      Enum.map(l, fn x ->
-        x
-        |> Enum.join
-        |> Integer.parse
-        |> elem(0)
-      end)
-    end)
-  end
+  def palindrome?(number) do
+    s = to_string(number) |> String.to_char_list()
+    l = length(s)
+    {a, b} = Enum.split(s, div(l, 2))
 
-  def palindromes(1) do
-    [(for a <- 1..9, do: [a])]
-  end
-
-  def palindromes(2) do
-    [(for a <- 1..9, do: [a, a]) | palindromes(1)]
-  end
-
-  def palindromes(n) do
-    z = palindromes(n - 1)
-    [_, two |_ ] = z
-
-    new_pals =
-      for a <- 1..9,
-          b <- [List.duplicate(0, n - 2) | two],
-          do: [a | ([a | b] |> Enum.reverse)]
-
-    [new_pals | z]
+    if Integer.is_even(l) do
+      a == Enum.reverse(b)
+    else
+      [_|x] = b
+      a == Enum.reverse(x)
+    end
   end
 end
