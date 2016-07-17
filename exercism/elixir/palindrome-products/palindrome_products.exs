@@ -17,7 +17,10 @@ defmodule Palindromes do
 
     palindroms =
       palindromes(min_size * max_size)
-      |> Enum.filter(&(&1 != 0))
+
+    IO.puts("----------- palindroms: #{inspect palindroms}")
+
+    palindroms
       |> Enum.map(fn p ->
         p
         |> Enum.join()
@@ -43,11 +46,29 @@ defmodule Palindromes do
     palindroms
   end
 
-  def palindromes(1), do: for a <- 0..9, do: [a]
-  def palindromes(2), do: for a <- 0..9, do: [a, a]
+  def palindromes(1) do
+    [(for a <- 1..9, do: [a])]
+  end
+
+  def palindromes(2) do
+    [(for a <- 1..9, do: [a, a]) | palindromes(1)]
+  end
+
   def palindromes(n) do
-    for a <- 1..9,
-        b <- palindromes(n - 2),
-        do: [a | ([a | b] |> Enum.reverse)]
+    zeros = List.duplicate(0, n - 2)
+    z = palindromes(n - 1)
+    IO.puts("------------- #{inspect z}")
+    [one,two|_] = z
+    pals = [zeros | two]
+
+    IO.puts("------------- #{inspect two}")
+    IO.puts("------------- #{inspect pals}")
+
+    new_pals =
+      for a <- 1..9,
+          b <- pals,
+          do: [a | ([a | b] |> Enum.reverse)]
+
+    [new_pals | z]
   end
 end
