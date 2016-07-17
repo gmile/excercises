@@ -6,13 +6,11 @@ defmodule Palindromes do
   """
   @spec generate(non_neg_integer, non_neg_integer) :: map
   def generate(max_factor, min_factor \\ 1) do
-    p =
-      for a <- min_factor..max_factor-1,
-          b <- a..max_factor,
-          palindrome?(a * b),
-          do: [a, b]
-
-    p |> Enum.group_by(fn [a, b] -> a * b end)
+    (for a <- min_factor..max_factor-1,
+        b <- a..max_factor,
+        palindrome?(a * b),
+        do: [a, b])
+    |> Enum.group_by(fn [a, b] -> a * b end)
   end
 
   def palindrome?(number) do
