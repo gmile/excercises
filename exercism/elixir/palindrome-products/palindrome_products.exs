@@ -5,33 +5,12 @@ defmodule Palindromes do
   """
   @spec generate(non_neg_integer, non_neg_integer) :: map
   def generate(max_factor, min_factor \\ 1) do
-    min_size =
-      min_factor
-      |> Integer.to_string()
-      |> String.length()
-
-    max_size =
-      max_factor
-      |> Integer.to_string()
-      |> String.length()
-
-    palindroms =
-      palindromes(min_size * max_size)
-
-    IO.puts("----------- palindroms: #{inspect palindroms}")
-
-    palindroms
-      |> Enum.map(fn p ->
-        p
-        |> Enum.join()
-        |> Integer.parse()
-        |> elem(0)
-      end)
+    ppp(6)
     |> Enum.reduce(%{}, fn(palindrom, acc) ->
       factors =
         (for a <- min_factor..max_factor,
              rem(palindrom, a) == 0,
-             div(palindrom, a) <= max_factor,
+             div(palindrom, a) in min_factor..max_factor,
              do: [div(palindrom, a), a])
       |> Enum.map(&Enum.sort/1)
       |> Enum.uniq
@@ -40,23 +19,19 @@ defmodule Palindromes do
     end)
     |> Enum.filter(fn {a,l} -> length(l) > 0 end)
     |> Enum.into(%{})
-
-    palindroms
   end
 
   def ppp(n) do
     n
     |> palindromes()
-    |> Enum.map(fn l ->
-      l
-      |> Enum.map(fn x ->
-           x
-           |> Enum.join
-           |> Integer.parse
-           |> elem(0)
-         end)
+    |> Enum.flat_map(fn l ->
+      Enum.map(l, fn x ->
+        x
+        |> Enum.join
+        |> Integer.parse
+        |> elem(0)
       end)
-    |> List.flatten
+    end)
   end
 
   def palindromes(1) do
