@@ -17,9 +17,8 @@ defmodule Frequency do
               Task.async(__MODULE__, :work, [text])
             end)
          |> Task.yield_many()
-         |> Enum.map(fn {_, { :ok, result }} -> result end)
        end)
-    |> Enum.reduce(%{}, fn(result, acc) ->
+    |> Enum.reduce(%{}, fn({_, { :ok, result }}, acc) ->
          Map.merge(acc, result, fn(_, v1, v2) -> v1 + v2 end)
        end)
   end
