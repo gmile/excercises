@@ -22,7 +22,7 @@ defmodule Frequency do
          |> Enum.each(&send(&1, { :work_on, &2 }))
        end)
 
-    wait_for_all(String.length(texts), %{})
+    wait_for_all(length(texts), %{})
   end
 
   def wait_for_all(0, final_result), do: final_result
