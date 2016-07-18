@@ -17,28 +17,19 @@ defmodule Frequency do
       end)
 
     IO.puts("#{inspect current}: sending jobs...")
-    texts
-    |> Enum.chunk(workers)
-    |> Enum.each(fn(texts) ->
-         Enum.zip(pids, texts)
-         |> Enum.each(fn { worker_pid, text } ->
-              send(worker_pid, { :work_on, text })
-            end)
+    pids
+    |> Stream.cycle()
+    |> Enum.zip(texts)
+    |> Enum.each(fn { worker_pid, text } ->
+         send(worker_pid, { :work_on, text })
        end)
 
     IO.puts("#{inspect current}: waiting for results from workers...")
     wait_for_all(length(texts), %{})
   end
 
-  # def issue_jobs_for([], _, _), do: :ok
-  # def issue_jobs_for(texts, [], pids), do: issue_jobs_for(
-  # def issue_jobs_for([text|rest_tests], [pid|rest_pids], pids) do
-  #   send(pid, { :work_on, text })
-  #   issue_jobs_for(rest_texts, rest_pids, [pid | pids2])
-  # end
-
-  def wait_for_all(0, final_result), do: final_result
-  def wait_for_all(jobs_left, final_result) do
+  defp wait_for_all(0, final_result), do: final_result
+  defp wait_for_all(jobs_left, final_result) do
     result =
       receive do
         { :job_is_done, result } -> result
