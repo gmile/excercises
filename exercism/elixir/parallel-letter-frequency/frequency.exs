@@ -7,44 +7,28 @@ defmodule Frequency do
   The number of worker processes to use can be set with 'workers'.
   """
   @spec frequency([String.t], pos_integer) :: map
+  def frequency([], _), do: %{}
   def frequency(texts, workers) do
-    current = self()
-
-    1..workers
-    |> Enum.map(fn(_worker) -> spawn(__MODULE__, :do_work_for, [current]) end)
-    |> Stream.cycle()
-    |> Enum.zip(texts)
-    |> Enum.each(fn { worker_pid, text } ->
-         send(worker_pid, { :work_on, text })
+    texts
+    |> Enum.chunk(Enum.min([workers, length(texts)]))
+    |> Enum.flat_map(fn(texts) ->
+         texts
+         |> Enum.map(fn(text) ->
+              Task.async(__MODULE__, :work, [text])
+            end)
+         |> Task.yield_many()
+         |> Enum.map(fn {_, { :ok, result }} -> result end)
        end)
-
-    wait_for_all(length(texts), %{})
+    |> Enum.reduce(%{}, fn(result, acc) ->
+         Map.merge(acc, result, fn(_, v1, v2) -> v1 + v2 end)
+       end)
   end
 
-  defp wait_for_all(0, final_result), do: final_result
-  defp wait_for_all(jobs_left, final_result) do
-    result =
-      receive do
-        { :job_is_done, result } ->
-          Map.merge(final_result, result, fn(_, v1, v2) -> v1 + v2 end)
-      end
-
-    wait_for_all(jobs_left - 1, result)
-  end
-
-  def do_work_for(parent_pid) do
-    receive do
-      { :work_on, text } ->
-        result =
-          Regex.scan(~r|\p{L}|u, String.downcase(text))
-          |> List.flatten()
-          |> Enum.reduce(%{}, fn(c, acc) ->
-            Map.update(acc, c, 1, &(&1 + 1))
-          end)
-
-        send(parent_pid, { :job_is_done, result })
-    end
-
-    do_work_for(parent_pid)
+  def work(text) do
+    Regex.scan(~r|\p{L}|u, String.downcase(text))
+    |> List.flatten()
+    |> Enum.reduce(%{}, fn(c, acc) ->
+      Map.update(acc, c, 1, &(&1 + 1))
+    end)
   end
 end
