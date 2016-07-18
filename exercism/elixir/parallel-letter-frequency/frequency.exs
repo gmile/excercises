@@ -40,6 +40,7 @@ defmodule Frequency do
       { :work_on, text } ->
         result =
           text
+          |> String.downcase()
           |> String.graphemes()
           |> Enum.reduce(%{}, fn(c, acc) ->
             Map.update(acc, c, 1, &(&1 + 1))
