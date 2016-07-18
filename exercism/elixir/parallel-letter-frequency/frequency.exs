@@ -13,9 +13,7 @@ defmodule Frequency do
     |> Enum.chunk(Enum.min([workers, length(texts)]))
     |> Enum.flat_map(fn(texts) ->
          texts
-         |> Enum.map(fn(text) ->
-              Task.async(__MODULE__, :work, [text])
-            end)
+         |> Enum.map(&Task.async(__MODULE__, :work, [&1]))
          |> Task.yield_many()
        end)
     |> Enum.reduce(%{}, fn({_, { :ok, result }}, acc) ->
