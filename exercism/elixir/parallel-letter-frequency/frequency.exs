@@ -8,31 +8,46 @@ defmodule Frequency do
   """
   @spec frequency([String.t], pos_integer) :: map
   def frequency(texts, workers) do
+    current = self()
+
+    pids =
+      Enum.map(1..workers, fn(_worker)_ ->
+        spawn_link(__MODULE__, :do_work_for, [current])
+      end
+
     texts
-    |> Enum.each(fn(text) ->
-      spawn_link(__MODULE__, :do_frequency, [self(), text])
-    end)
+    |> Enum.chunk(workers) ->
+    |> Enum.each(fn(texts) ->
+         Enum.zip(pids, texts)
+         |> Enum.each(&send(&1, { :work_on, &2 }))
+       end)
 
-    result_from(workers)
+    wait_for_all(String.length(texts), %{})
   end
 
-  def do_frequency(parent_pid, text) do
+  def wait_for_all(0, final_result), do: final_result
+  def wait_for_all(number_of_texts, final_result) do
     result =
-      text
-      |> String.graphemes()
-      |> Enum.reduce(%{}, fn(c, acc) ->
-        Map.update(acc, c, 1, &(&1 + 1))
-      end)
+      receive do
+        { :job_is_done, result } -> result
+      end
 
-    send(parent_pid, { :ok, result })
+    wait_for_all(number_of_texts - 1, Map.merge(final_result, result, fn(_, v1, v2) -> v1 + v2 end))
   end
 
-  def result_from(workers, final_result // %{})
-  def result_from(0, final_result), do: final_result
-  def result_from(workers, final_result) do
+  def do_work_for(parent_pid) do
     receive do
-      { :ok, result } ->
-        result_from(workers - 1, Map.merge(final_result, result, fn(_, v1, v2) -> v1 + v2 end))
+      { :work_on, text } ->
+        result =
+          text
+          |> String.graphemes()
+          |> Enum.reduce(%{}, fn(c, acc) ->
+            Map.update(acc, c, 1, &(&1 + 1))
+          end)
+
+        send(parent_pid, { :job_is_done, result })
     end
+
+    do_work_for(parent_pid)
   end
 end
