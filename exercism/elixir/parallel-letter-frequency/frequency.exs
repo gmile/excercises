@@ -11,12 +11,12 @@ defmodule Frequency do
     current = self()
 
     pids =
-      Enum.map(1..workers, fn(_worker)_ ->
+      Enum.map(1..workers, fn(_worker) ->
         spawn_link(__MODULE__, :do_work_for, [current])
-      end
+      end)
 
     texts
-    |> Enum.chunk(workers) ->
+    |> Enum.chunk(workers)
     |> Enum.each(fn(texts) ->
          Enum.zip(pids, texts)
          |> Enum.each(&send(&1, { :work_on, &2 }))
