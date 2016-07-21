@@ -6,13 +6,26 @@ defmodule RailFenceCipher do
   def encode(str, 1), do: str
   def encode(str, rails) when rails > length(str), do: str
   def encode(str, rails) do
+    lines =
+      []
+      |> List.duplicate(rails)
+      |> Enum.with_index()
+
     str
-    |> String.graphemes()
-    |> Enum.with_index()
-    |> Enum.group_by(&rem(&1, rails))
-    |> Map.values()
+    |> spread_on(lines, [])
+    |> Enum.sort_by(&elem(&1, 1))
+    |> Enum.map(&elem(&1, 0) |> Enum.reverse)
     |> List.flatten()
-    |> Enum.map_join(fn { c, i } -> c end)
+    |> to_string()
+  end
+
+  def spread_on("", a, b), do: a ++ b
+  def spread_on(<< char, rest::binary >>, [{ line, index }], lines) do
+    spread_on(rest, lines, [{ [char|line], index }])
+  end
+
+  def spread_on(<< char, rest::binary >>, [{ line, index } | other_lines], lines) do
+    spread_on(rest, other_lines, [{ [char|line], index } | lines])
   end
 
   @doc """
