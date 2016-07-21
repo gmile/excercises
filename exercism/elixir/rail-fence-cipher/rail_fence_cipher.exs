@@ -35,6 +35,33 @@ defmodule RailFenceCipher do
   def decode(str, 1), do: str
   def decode(str, rails) when rails > length(str), do: str
   def decode(str, rails) do
+    line_counts =
+      0
+      |> List.duplicate(rails)
+      |> Enum.with_index()
+      |> get_line_counts(String.length(str), [])
+      |> Enum.sort_by(&elem(&1, 1))
+      |> Enum.unzip()
+      |> elem(0)
 
+    get_lines(str, line_counts)
+    # |> Enum.sort_by(&elem(&1, 1))
+    # |> Enum.map(&elem(&1, 0) |> Enum.reverse)
+    # |> List.flatten()
+    # |> to_string()
+  end
+
+  def get_lines("", _, out), do: out
+  def get_lines(str, [h|t], out) do
+    String.split(str, h)
+  end
+
+  def get_line_counts(a, 0, b), do: a ++ b
+  def get_line_counts([{ count, index }], rails, b) do
+    get_line_counts(b, rails - 1, [{ count + 1, index }])
+  end
+
+  def get_line_counts([{ count, index } | a], rails, b) do
+    get_line_counts(a, rails - 1, [{ count + 1, index } | b])
   end
 end
