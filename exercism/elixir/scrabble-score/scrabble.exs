@@ -22,7 +22,7 @@ defmodule Scrabble do
     word
     |> String.strip
     |> String.downcase
-    |> String.to_char_list
+    |> String.to_charlist
     |> Enum.map(&@map[&1])
     |> Enum.sum
   end

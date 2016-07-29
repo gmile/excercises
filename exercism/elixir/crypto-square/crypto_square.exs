@@ -13,7 +13,7 @@ defmodule CryptoSquare do
       str
       |> String.downcase
       |> String.replace(~r|[^\w]|, "")
-      |> String.to_char_list
+      |> String.to_charlist
 
     cols = :math.sqrt(length(str)) |> Float.ceil |> trunc
 

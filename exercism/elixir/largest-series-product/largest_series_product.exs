@@ -5,7 +5,7 @@ defmodule Series do
   @spec largest_product(String.t, non_neg_integer) :: non_neg_integer
   def largest_product(_, 0), do: 1
   def largest_product(number_string, size) do
-    chars = String.to_char_list(number_string)
+    chars = String.to_charlist(number_string)
 
     if size < 0 || length(chars) < size, do: raise ArgumentError
 

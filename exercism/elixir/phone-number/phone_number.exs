@@ -33,7 +33,7 @@ defmodule Phone do
       Regex.scan(~r/\p{Nd}/, raw)
       |> List.flatten
       |> Enum.join
-      |> String.to_char_list
+      |> String.to_charlist
       |> normalize
     end
   end

@@ -20,7 +20,7 @@ defmodule Hexadecimal do
   def to_decimal(hex) do
     if hex =~ ~r/^[A-Fa-f0-9]+$/ do
       hex
-      |> String.to_char_list
+      |> String.to_charlist
       |> Enum.reduce(0, fn(char, acc) ->
         n =
           cond do

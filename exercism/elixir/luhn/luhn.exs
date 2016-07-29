@@ -6,7 +6,7 @@ defmodule Luhn do
   def checksum(number) do
     number 
     |> String.reverse
-    |> String.to_char_list
+    |> String.to_charlist
     |> do_checksum
   end
 

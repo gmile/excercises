@@ -11,7 +11,7 @@ defmodule Atbash do
   def encode(plaintext) do
     plaintext
     |> do_encode()
-    |> String.to_char_list
+    |> String.to_charlist
     |> Enum.chunk(5, 5, [])
     |> Enum.join(" ")
   end
