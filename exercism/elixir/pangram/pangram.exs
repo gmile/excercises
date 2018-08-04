@@ -19,6 +19,6 @@ defmodule Pangram do
       |> String.downcase()
       |> String.to_char_list()
 
-    Enum.all?(?a..?z, &(&1 in chars))
+    length(Enum.to_list(?a..?z) -- chars) == 0
   end
 end
